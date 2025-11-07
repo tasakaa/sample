@@ -24,7 +24,7 @@
       display: block;
       margin-top: 10px;
     }
-    input[type="text"] {
+    input[type="text"], input[type="date"] {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
@@ -64,9 +64,13 @@
     <label for="name">名前：</label>
     <input type="text" id="name" name="name" required>
 
+    <label for="date">参加日：</label>
+    <input type="date" id="date" name="date" required>
+
     <div class="options">
       <label><input type="radio" name="attendance" value="〇" required> 〇（参加）</label>
       <label><input type="radio" name="attendance" value="×"> ×（不参加）</label>
+      <label><input type="radio" name="attendance" value="△"> △（未定）</label>
     </div>
 
     <button type="button" onclick="showResult()">結果を表示</button>
@@ -80,20 +84,19 @@
   <script>
     function showResult() {
       const name = document.getElementById('name').value.trim();
+      const date = document.getElementById('date').value;
       const attendance = document.querySelector('input[name="attendance"]:checked');
 
       const resultList = document.getElementById('resultList');
       const li = document.createElement('li');
 
-      if (name && attendance) {
-        li.textContent = `${name}：${attendance.value}`;
+      if (name && date && attendance) {
+        li.textContent = `${date}｜${name}：${attendance.value}`;
       } else {
-        li.textContent = '名前または参加状況が未入力です。';
+        li.textContent = '名前・日付・参加状況のいずれかが未入力です。';
       }
 
       resultList.appendChild(li);
-
-      // 入力をリセット（必要なら）
       document.getElementById('attendanceForm').reset();
     }
   </script>
