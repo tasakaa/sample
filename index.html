@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>飲み会参加者一覧</title>
+  <title>飲み会参加確認</title>
   <style>
     body {
       font-family: sans-serif;
@@ -12,43 +12,44 @@
     h1 {
       text-align: center;
     }
-    table {
-      width: 100%;
-      max-width: 600px;
+    form {
+      max-width: 500px;
       margin: auto;
-      border-collapse: collapse;
       background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    th, td {
-      padding: 12px;
-      border: 1px solid #ccc;
-      text-align: center;
+    label {
+      display: block;
+      margin-top: 10px;
     }
-    th {
-      background-color: #0077cc;
-      color: white;
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
     }
-    input[type="radio"] {
-      transform: scale(1.2);
+    .options {
+      margin-top: 10px;
+    }
+    .options label {
+      margin-right: 20px;
     }
     button {
-      margin-top: 20px;
+      margin-top: 15px;
       padding: 10px 20px;
       background-color: #0077cc;
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
     }
     button:hover {
       background-color: #005fa3;
     }
     #result {
-      max-width: 600px;
+      max-width: 500px;
       margin: 30px auto;
       background-color: #fff;
       padding: 20px;
@@ -58,30 +59,16 @@
   </style>
 </head>
 <body>
-  <h1>飲み会参加者一覧</h1>
+  <h1>飲み会参加確認フォーム</h1>
   <form id="attendanceForm">
-    <table>
-      <tr>
-        <th>名前</th>
-        <th>〇（参加）</th>
-        <th>×（不参加）</th>
-      </tr>
-      <tr>
-        <td>田中</td>
-        <td><input type="radio" name="tanaka" value="〇"></td>
-        <td><input type="radio" name="tanaka" value="×"></td>
-      </tr>
-      <tr>
-        <td>佐藤</td>
-        <td><input type="radio" name="sato" value="〇"></td>
-        <td><input type="radio" name="sato" value="×"></td>
-      </tr>
-      <tr>
-        <td>鈴木</td>
-        <td><input type="radio" name="suzuki" value="〇"></td>
-        <td><input type="radio" name="suzuki" value="×"></td>
-      </tr>
-    </table>
+    <label for="name">名前：</label>
+    <input type="text" id="name" name="name" required>
+
+    <div class="options">
+      <label><input type="radio" name="attendance" value="〇" required> 〇（参加）</label>
+      <label><input type="radio" name="attendance" value="×"> ×（不参加）</label>
+    </div>
+
     <button type="button" onclick="showResult()">結果を表示</button>
   </form>
 
@@ -92,22 +79,22 @@
 
   <script>
     function showResult() {
-      const names = ['田中', '佐藤', '鈴木'];
-      const resultList = document.getElementById('resultList');
-      resultList.innerHTML = '';
+      const name = document.getElementById('name').value.trim();
+      const attendance = document.querySelector('input[name="attendance"]:checked');
 
-      names.forEach(name => {
-        const radios = document.getElementsByName(name.toLowerCase());
-        let selected = '';
-        radios.forEach(radio => {
-          if (radio.checked) {
-            selected = radio.value;
-          }
-        });
-        const li = document.createElement('li');
-        li.textContent = `${name}：${selected || '未回答'}`;
-        resultList.appendChild(li);
-      });
+      const resultList = document.getElementById('resultList');
+      const li = document.createElement('li');
+
+      if (name && attendance) {
+        li.textContent = `${name}：${attendance.value}`;
+      } else {
+        li.textContent = '名前または参加状況が未入力です。';
+      }
+
+      resultList.appendChild(li);
+
+      // 入力をリセット（必要なら）
+      document.getElementById('attendanceForm').reset();
     }
   </script>
 </body>
